@@ -1,0 +1,20 @@
+{
+  "name": "remnant",
+  "version": "0.0.1",
+  "description": "",
+  "homepage": "https://gdaythom.github.io/remnant/",
+  "repository": "https://github.com/gdaythom/remnant",
+  "bugs": "https://github.com/gdaythom/remnant/issues",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "main": "index.js",
+  "keywords": [
+    "generative",
+    "art",
+    "canvas",
+    "svg"
+  ],
+  "author": "Thom Vincent",
+  "license": "MIT"
+}
