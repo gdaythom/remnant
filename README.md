@@ -10,7 +10,7 @@
 var Remnant = require('remnant');
 
 remnant('#something');
-// hides the 
+// hides the #something element, replaces it with a remnant
 ```
 
 Here are all of the options, described in detail below.
