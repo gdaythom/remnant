@@ -9,8 +9,8 @@
 ```javascript
 var Remnant = require('remnant');
 
-remnant('#something');
-// hides the 
+remnant('#brisket');
+// where `#brisket` is the id of an HTML element
 ```
 
 Here are all of the options, described in detail below.
