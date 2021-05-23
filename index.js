@@ -29,6 +29,8 @@ function remnant(element, options) {
     font: '42px Arial',
     // Animation frames per second
     refresh: 24,
+    // Image settings
+    imageQuality: 80,
     // Additional classes
     class: 'remnant',
     debug: false,
@@ -65,6 +67,7 @@ function remnant(element, options) {
   var canvasRendered = false;
   var canvas = document.createElement('canvas');
   var ctx = canvas.getContext("2d");
+  var image = document.createElement('img');
 
   // https://stackoverflow.com/questions/27936772/how-to-deep-merge-instead-of-shallow-merge
   function mergeDeep(target, ...sources) {
@@ -117,6 +120,11 @@ function remnant(element, options) {
       if(options.word) {
         addWord();
       }
+
+      if(!options.refresh) {
+        setupImage();
+        removeElement();
+      }
     }
 
     /**
@@ -148,6 +156,30 @@ function remnant(element, options) {
       }(0));
     };
 
+    function removeElement() {
+      el[0].parentNode.removeChild(el[0]);
+    }
+
+    function setupImage() {
+      image.src = canvas.toDataURL('image/jpeg', options.imageQuality/100);
+      image.height = options.height;
+      image.width = options.width;
+
+      const d = new Date();
+      const year = d.getFullYear();
+      const month = ('0' + (1 + d.getMonth())).slice(-2);
+      const date = d.getDate();
+      const hour = d.getHours();
+      const minutes = d.getMinutes();
+      const seconds = d.getSeconds();
+
+      // <a href="data:image/gif;base64,R0l...QA7" download="some_name.gif">
+      //   <img src="data:image/gif;base64,R0l...QA7" width="16" height="14" alt="embedded folder icon"/>
+      // </a>
+      image.alt = `Remnant ${year}-${month}-${date} at ${hour}.${minutes}.${seconds}.jpeg`;
+      el[0].parentNode.insertBefore(image, el[0].nextSibling);
+    }
+
     function setupCanvas() {
       canvas.width = options.width ? options.width * options.scale : el[0].getAttribute('width') * options.scale;
       canvas.height = options.height ? options.height * options.scale : el[0].getAttribute('height') * options.scale;
@@ -172,8 +204,10 @@ function remnant(element, options) {
         options.scale = (computedHeight / (el[0].getAttribute('height') * options.scale)) * options.scale;
       }
 
-      el[0].parentNode.insertBefore(canvas, el[0].nextSibling);
-      canvasRendered = true;
+      if (options.refresh) {
+        el[0].parentNode.insertBefore(canvas, el[0].nextSibling);
+        canvasRendered = true;
+      }
     }
 
     function addWord() {
