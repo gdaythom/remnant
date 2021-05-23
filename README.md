@@ -4,13 +4,12 @@
 
 ### How
 
-`npm install remnant --save`
+`npm install @gdaythom/remnant --save`
 
 ```javascript
 var Remnant = require('remnant');
 
 remnant('#something');
-// hides the 
 ```
 
 Here are all of the options, described in detail below.
