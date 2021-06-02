@@ -93,6 +93,9 @@ function remnant(element, options) {
 
   window.addEventListener('DOMContentLoaded', () => {
     var el = document.querySelectorAll(element);
+    if(el.length === 0) {
+      return false;
+    }
     el[0].style.display = "none";
 
     init();
