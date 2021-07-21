@@ -1,6 +1,6 @@
 {
   "name": "@gdaythom/remnant",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "",
   "homepage": "https://gdaythom.github.io/remnant/",
   "repository": "https://github.com/gdaythom/remnant",
@@ -16,5 +16,8 @@
     "svg"
   ],
   "author": "Thom Vincent",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "dat.gui": "^0.7.7"
+  }
 }
