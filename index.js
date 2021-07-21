@@ -19,35 +19,44 @@ function remnant(element, options) {
     circuits: 2,
     // Colours to use and where to use them
     palette: {
-      background: 'white',
-      stroke: 'black',
-      fill: 'transparent',
-      text: 'black',
+      background: '#ffffff',
+      stroke: '#000000',
+      fill: '#ffffff',
+      text: '#000000',
       debug: 'blue'
     },
-    word: '',
-    font: '42px Arial',
+    word: 'helloworld',
+    // font: 'Italic 42px Arial',
+    font: {
+      family: 'Arial',
+      size: 42,
+      weight: 'normal',
+      style: 'normal',
+      variant: 'normal'
+    },
     // Animation frames per second
-    refresh: 24,
+    refresh: false,
     // Image settings
     imageQuality: 80,
     // Additional classes
     class: 'remnant',
-    debug: false,
     startFromX: 0,
     startFromY: 0,
     scale: window.devicePixelRatio,
     defaultShadow: -15,
     defaultHighlight: 15,
     shadingOffset: 20,
-    width: false,
-    height: false,
+    width: 1000,
+    height: 1000,
     lineJoin: 'round',
     lineCap: 'round',
-    lineDash: []
+    lineDash: '',
+    debug: false,
+    datgui: false
   };
 
   options.palette = mergeDeep(defaults.palette, options.palette);
+  options.font = mergeDeep(defaults.font, options.font);
   options = {...defaults, ...options};
 
   // Define regular expressions
@@ -98,6 +107,81 @@ function remnant(element, options) {
     }
     el[0].style.display = "none";
 
+    if(options.datgui) {
+      const dat = require('dat.gui');
+      var gui = new dat.GUI();
+
+      // Settings
+      gui.add(options, "thickness").min(1).max(50).step(1).onChange(() => {
+        init();
+      });
+      gui.add(options, "drift").min(1).max(50).step(1).onChange(() => {
+        init();
+      });
+      gui.add(options, "circuits").min(1).max(50).step(1).onChange(() => {
+        init();
+      });
+      gui.add(options, "imageQuality").min(1).max(100).step(1).onChange(() => {
+        init();
+      });
+      gui.add(options, "word").onChange(() => {
+        init();
+      });
+      // Font
+      gui.add(options.font, 'family', {Arial:'Arial',Georgia:'Georgia','Courier New':'Courier New'}).onChange(() => {
+        init();
+      });
+      gui.add(options.font, 'size').min(1).max(1000).step(1).onChange(() => {
+        init();
+      });
+      gui.add(options.font, 'weight', {normal:'normal',bold:'bold',bolder:'bolder',lighter:'lighter'}).onChange(() => {
+        init();
+      });
+      gui.add(options.font, 'style', {normal:'normal',italic:'italic',oblique:'oblique'}).onChange(() => {
+        init();
+      });
+      gui.add(options.font, 'variant', {normal:'normal','small-caps':'small-caps'}).onChange(() => {
+        init();
+      });
+      // Colours
+      gui.addColor(options.palette, 'stroke').onChange(() => {
+        init();
+      });
+      gui.addColor(options.palette, 'background').onChange(() => {
+        init();
+      });
+      gui.addColor(options.palette, 'fill').onChange(() => {
+        init();
+      });
+      gui.addColor(options.palette, 'text').onChange(() => {
+        init();
+      });
+      // Shading
+      gui.add(options, "defaultShadow").min(-50).max(50).step(1).onChange(() => {
+        init();
+      });
+      gui.add(options, "defaultHighlight").min(-50).max(50).step(1).onChange(() => {
+        init();
+      });
+      gui.add(options, "shadingOffset").min(1).max(100).step(1).onChange(() => {
+        init();
+      });
+      // Strokes
+      gui.add(options, 'lineJoin', {arcs:'arcs',bevel:'bevel',miter:'miter','miter-clip':'miter-clip',round:'round'}).onChange(() => {
+        init();
+      });
+      gui.add(options, 'lineCap', {butt:'butt',round:'round',square:'square'}).onChange(() => {
+        init();
+      });
+      gui.add(options, "lineDash").onChange(() => {
+        init();
+      });
+      // Debug
+      gui.add(options, "debug").onChange(() => {
+        init();
+      });
+    }
+
     init();
 
     if(options.refresh) {
@@ -126,7 +210,9 @@ function remnant(element, options) {
 
       if(!options.refresh) {
         setupImage();
-        removeElement();
+        if(!options.datgui) {
+          removeElement();
+        }
       }
     }
 
@@ -216,7 +302,7 @@ function remnant(element, options) {
     function addWord() {
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.fillStyle = getColour('text');
-      ctx.font = options.font;
+      ctx.font = `${options.font.style} ${options.font.variant} ${options.font.weight} ${options.font.size}px ${options.font.family}`;
       var textWidth = ctx.measureText(options.word).width;
       var textHeight = ctx.measureText('O').width;
       ctx.fillText(options.word , (canvas.width / 2) - (textWidth / 2), (canvas.height / 2) + (textHeight / 2));
@@ -323,7 +409,7 @@ function remnant(element, options) {
           ctx.restore();
         } else {
             ctx.beginPath();
-            ctx.setLineDash(options.lineDash);
+            ctx.setLineDash(options.lineDash.split(':'));
             ctx.lineWidth = options.thickness;
             ctx.strokeStyle = path.stroke;
             ctx.lineJoin = options.lineJoin;
