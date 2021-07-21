@@ -25,8 +25,7 @@ function remnant(element, options) {
       text: '#000000',
       debug: 'blue'
     },
-    word: 'helloworld',
-    // font: 'Italic 42px Arial',
+    word: '',
     font: {
       family: 'Arial',
       size: 42,
